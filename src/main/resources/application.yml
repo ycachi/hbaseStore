@@ -1,0 +1,68 @@
+server:  
+    port: 8088
+    #address: localhost
+    context-path: /image
+# DATASOURCE
+spring:
+    datasource:
+            system: 
+                name: base_project_db
+                url: jdbc:mysql://192.168.0.64:3306/spring_boot_login_test?characterEncoding=utf-8&allowMultiQueries=true
+                username: root
+                password: 111111
+                # 使用druid数据源
+                type: com.alibaba.druid.pool.DruidDataSource
+                driver-class-name: com.mysql.jdbc.Driver
+                filters: stat,log4j
+                maxActive: 20
+                initialSize: 1
+                maxWait: 60000
+                minIdle: 1
+                timeBetweenEvictionRunsMillis: 60000
+                minEvictableIdleTimeMillis: 300000
+                validationQuery: select 'x'
+                testWhileIdle: true
+                #cachePrepStmts: true 开启二级缓存
+                testOnBorrow: false
+                testOnReturn: false
+                poolPreparedStatements: true
+                maxOpenPreparedStatements: 20
+            business: 
+                name: base_project_db
+                url: jdbc:mysql://192.168.1.201:3306/image?characterEncoding=utf-8
+                username: root
+                password: root
+                # 使用druid数据源
+                type: com.alibaba.druid.pool.DruidDataSource
+                driver-class-name: com.mysql.jdbc.Driver
+                filters: stat,log4j
+                maxActive: 20
+                initialSize: 1
+                maxWait: 60000
+                minIdle: 1
+                timeBetweenEvictionRunsMillis: 60000
+                minEvictableIdleTimeMillis: 300000
+                validationQuery: select 'x'
+                testWhileIdle: true
+                #cachePrepStmts: true 开启二级缓存
+                testOnBorrow: false
+                testOnReturn: false
+                poolPreparedStatements: true
+                maxOpenPreparedStatements: 20
+    freemarker:
+        allow-request-override: false
+        cache: true
+        check-template-location: true
+        charset: UTF-8
+        content-type: text/html
+        expose-request-attributes: true
+        expose-session-attributes: false
+        expose-spring-macro-helpers: false
+        suffix: .html
+        template-loader-path: classpath:/templates/
+        request-context-attribute: request
+        
+autoconfiguration:
+    packagePath: com.asiainfo.base.mapper
+    aliasesPackage: com.asiainfo.base.entity
+    resourcesPath: classpath:mapper/**/*.xml

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.asiainfo.base.mapper.system.UserMapper">
+    <resultMap id="userMap" type="com.asiainfo.base.entity.system.SysUser">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="characterName" column="character_name"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="isEnable" column="isenable"/>
+        <result property="login_ip" column="login_ip"/>
+        <result property="operateDate" column="operate_date"/>
+        <result property="remarks" column="remarks"/>
+        <result property="delFlag" column="del_flag"/>
+        <collection property="roles" ofType="com.asiainfo.base.entity.system.SysRole">
+            <result property="id" column="role_id" />
+            <result property="name" column="name" />
+        </collection>
+    </resultMap>
+    <select id="findByMap" parameterType="java.util.Map" resultMap="userMap">
+		select u.*
+		,ru.role_id,r.name
+		from sys_user u,sys_role_user ru,sys_role r
+        where  ru.sys_user_id =u.id AND r.id = ru.role_id and u.isenable=1
+        <if test="username != null and username != ''">
+			AND u.username = #{username}
+		</if>
+		<if test="id != null and id != ''">
+			AND u.id = #{id}
+		</if>
+	</select>
+	<select id="findByUserName" parameterType="java.lang.String" resultMap="userMap">
+		select * from sys_user where username = #{username} and del_flag='0'
+	</select>
+	<insert id="insertUser" parameterType="com.asiainfo.base.entity.system.SysUser">
+	    insert into sys_user (id, username, password, character_name, email,phone,isenable,login_ip,operate_date,remarks,del_flag)
+	    values (#{id}, #{username}, #{password}, #{characterName}, #{email},
+	    #{phone}, #{isEnable}, #{login_ip}, #{operateDate}, #{remarks}, #{delFlag})
+  	</insert>
+  	<delete id="deleteById" parameterType="java.lang.String">
+		delete from sys_user where id = #{id}
+	</delete>
+	<select id="queryById" parameterType="java.lang.String" resultMap="userMap">
+		select * from sys_user where id = #{id}
+	</select>
+	<delete id="deleteUserRole" parameterType="java.lang.String">
+		delete from sys_role_user where sys_user_id = #{id}
+	</delete>
+	<delete id="deleteUserWithoutRole">
+		DELETE FROM sys_user WHERE id NOT IN (SELECT DISTINCT(sys_user_id) FROM sys_role_user )
+	</delete>
+	<update id="updateUser" parameterType="com.asiainfo.base.entity.system.SysUser">
+	    update sys_user
+	    <set>
+	      <if test="username != null">
+	        username = #{username},
+	      </if>
+	      <if test="password != null">
+	        password = #{password},
+	      </if>
+	      <if test="characterName != null">
+	        character_name = #{characterName},
+	      </if>
+	      <if test="email != null">
+	        email = #{email},
+	      </if>
+	      <if test="phone != null">
+	        phone = #{phone},
+	      </if>
+	      <if test="isEnable != null">
+	        isenable = #{isEnable},
+	      </if>
+	      <if test="login_ip != null">
+	        login_ip = #{login_ip},
+	      </if>
+	      <if test="operateDate != null">
+	        operate_date = #{operateDate},
+	      </if>
+	      <if test="remarks != null">
+	        remarks = #{remarks},
+	      </if>
+	      <if test="delFlag != null">
+	        del_flag = #{delFlag},
+	      </if>
+	    </set>
+	    where id = #{id}
+  </update>
+  <sql id="userColumns">
+    	a.id,
+    	a.username,
+    	a.password,
+		a.character_name,
+		a.email,
+		a.phone,
+		a.login_ip,
+		a.operate_date,
+		a.remarks,
+		a.isenable,
+		a.del_flag
+    </sql>
+    <!-- 查询用户信息 -->
+	<select id="findAllList" resultMap="userMap">
+		SELECT
+			<include refid="userColumns"/>
+		FROM sys_user a
+		WHERE a.del_flag = 0
+		ORDER BY a.id
+	</select>
+	<insert id="insertUserRole">
+		INSERT INTO sys_role_user(sys_user_id, role_id)
+		<foreach collection="roles" item="role" separator=" union all ">
+			SELECT #{id}, #{role.id}
+		</foreach>
+	</insert>
+</mapper>

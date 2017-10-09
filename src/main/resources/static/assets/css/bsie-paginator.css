@@ -1,0 +1,44 @@
+/* 分页查询样式(兼容ie浏览器) */
+.ui-icon{
+	text-indent:0px !important;
+}
+
+.ui-pg-table>tbody>tr>.ui-pg-button>.ui-icon {
+    display: inline-block;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    line-height: 22px;
+    text-align: center;
+    position: static;
+    float: none;
+    margin: 0 2px!important;
+    color: gray;
+    border: 1px solid #CCC;
+    background-color: #FFF;
+    border-radius: 100%;
+}
+
+.ui-jqgrid .ui-jqgrid-pager {
+	line-height: 15px;
+}
+  
+.ui-jqgrid .ui-pager-control {
+   height: 50px;
+   position: relative;
+   padding-left: 9px;
+   padding-right: 9px;
+}
+
+.ui-jqgrid .ui-pg-input {
+    font-size: inherit !important;
+    width: 24px !important;
+    height: 20px !important;
+    line-height: 16px !important;
+    -webkit-box-sizing: content-box !important;
+    -moz-box-sizing: content-box !important;
+    box-sizing: content-box !important;
+    text-align: center !important;
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+}

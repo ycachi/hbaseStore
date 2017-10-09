@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.asiainfo.base.mapper.system.MenuMapper">
+	<resultMap id="menuMap" type="com.asiainfo.base.entity.system.Menu" extends="basePojoMap">
+        <id  property="id" column="id"/>
+		<result  property="name" column="name"/>
+		<result  property="href" column="href"/>
+		<result  property="icon" column="icon"/>
+		<result  property="sort" column="sort"/>
+		<result property="isShow" column="isShow"/>
+        <result property="permission" column="permission"/>
+        <association property="Menu" javaType="com.asiainfo.base.entity.system.Menu">
+		   <id  property="id" column="id"/>
+		   <result  property="name" column="name"/>
+		   <result  property="href" column="href"/>
+		   <result  property="icon" column="icon"/>
+		   <result  property="sort" column="sort"/>
+		   <result property="isShow" column="isShow"/>
+           <result property="permission" column="permission"/>
+		</association>
+    </resultMap>
+    <resultMap id="basePojoMap" type="com.asiainfo.base.entity.system.BasePojo">
+    	<id  property="id" column="id"/>
+    	<result  property="remarks" column="remarks"/>
+    	<result  property="delFlag" column="del_flag"/>
+    </resultMap>
+
+	<sql id="menuColumns">
+		a.id,
+		a.parent_id AS "parent.id",
+		a.name,
+		a.href,
+		a.icon,
+		a.sort,
+		a.is_show,
+		a.permission,
+		a.remarks,
+		a.del_flag,
+		p.name AS "parent.name"
+	</sql>
+	
+	<sql id="menuJoins">
+		LEFT JOIN sys_menu p ON p.id = a.parent_id
+    </sql>
+	<select id="findAllList" resultType="com.asiainfo.base.entity.system.Menu" >
+		SELECT
+			<include refid="menuColumns"/>
+		FROM sys_menu a
+		<include refid="menuJoins"/>
+		WHERE a.del_flag = 0 AND a.is_show = 1
+		ORDER BY a.sort
+	</select>
+		
+		
+   <select id="findDataShowList" resultType="com.asiainfo.base.entity.system.Menu" >
+		SELECT
+			<include refid="menuColumns"/>
+		FROM sys_menu a
+		<include refid="menuJoins"/>
+		WHERE a.del_flag = 0 and a.permission ='DS_MENU'
+		ORDER BY a.sort
+	</select>
+	<select id="findAllShowList" resultType="com.asiainfo.base.entity.system.Menu">
+		SELECT
+			<include refid="menuColumns"/>
+		FROM sys_menu a
+		<include refid="menuJoins"/>
+		WHERE a.del_flag = 0 AND a.is_show = 1
+		ORDER BY a.sort
+	</select>
+	<select id="findShowListByUser" resultType="com.asiainfo.base.entity.system.Menu" parameterType="com.asiainfo.base.entity.system.SysUser">
+		SELECT DISTINCT
+			<include refid="menuColumns"/>
+		FROM sys_menu a
+		LEFT JOIN sys_menu p ON p.id = a.parent_id
+		JOIN sys_role_menu rm ON rm.menu_id = a.id
+		JOIN sys_role r ON r.id = rm.role_id AND r.enable='1'
+		JOIN sys_role_user ur ON ur.role_id = r.id
+		JOIN sys_user u ON u.id = ur.sys_user_id AND u.id = #{id}
+		WHERE a.del_flag = 0 AND r.del_flag = 0 AND u.del_flag = 0
+		ORDER BY a.sort
+	</select>
+	<update id="update">
+		UPDATE sys_menu SET 
+			parent_id = #{parent.id}, 
+			name = #{name}, 
+			href = #{href}, 
+			icon = #{icon}, 
+			sort = #{sort}, 
+			is_show = #{isShow}, 
+			permission = #{permission}, 
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<insert id="insertRoleMenu">
+		INSERT INTO sys_role_menu(
+			role_id, 
+			menu_id
+		) VALUES (
+			"1", 
+			#{id}
+		)
+	</insert>
+	
+	
+	
+	
+	<insert id="insert">
+		INSERT INTO sys_menu(
+			id, 
+			parent_id, 
+			name, 
+			href, 
+			icon, 
+			sort, 
+			is_show, 
+			permission, 
+			remarks, 
+			del_flag
+		) VALUES (
+			#{id}, 
+			#{parent.id}, 
+			#{name}, 
+			#{href}, 
+			#{icon}, 
+			#{sort}, 
+			#{isShow}, 
+			#{permission}, 
+			#{remarks}, 
+			#{delFlag}
+		)
+	</insert>
+	<select id="selectIcons" resultType="java.lang.String">
+		SELECT icon FROM sys_menu WHERE icon !=''
+	</select>
+	<select id="selectMenu" resultType="com.asiainfo.base.entity.system.Menu">
+		SELECT
+			<include refid="menuColumns"/>
+		FROM sys_menu a
+		<include refid="menuJoins"/>
+		WHERE 1 = 1
+		<if test="id != null and id != ''">
+			AND a.id = #{id}
+		</if>
+		<if test="parent != null and parent != ''">
+			AND a.parent_id = #{parent.id}
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name = #{name}
+		</if>
+		<if test="sort != null and sort != ''">
+			AND a.sort = #{sort}
+		</if>
+		<if test="href != null and href != ''">
+			AND a.href = #{href}
+		</if>
+		<if test="icon != null and icon != ''">
+			AND a.icon = #{icon}
+		</if>
+		<if test="isShow != null and isShow != ''">
+			AND a.is_show = #{isShow}
+		</if>
+		<if test="permission != null and permission != ''">
+			AND a.permission = #{permission}
+		</if>
+		<if test="remarks != null and remarks != ''">
+			AND a.remarks = #{remarks}
+		</if>
+		<if test="delFlag != null and delFlag != ''">
+			AND a.del_flag = #{delFlag}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.asiainfo.base.mapper.system.SysRoleMapper">
+	<resultMap id="roleResult" type="com.asiainfo.base.entity.system.SysRole">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="englishName" column="english_name" />
+		<result property="remark" column="remark" />
+		<collection property="menuList" ofType="com.asiainfo.base.entity.system.Menu">
+			<id property="id" column="menuList.id" />
+		</collection>
+	</resultMap>
+	<sql id="roleColumns">
+    	a.id,
+    	a.name,
+    	a.english_name,
+		a.remark,
+		a.del_flag
+    </sql>
+    <select id="getById" resultMap="roleResult">
+		SELECT
+			<include refid="roleColumns"/>,
+			rm.menu_id AS "menuList.id"
+		FROM sys_role a
+		LEFT JOIN sys_role_menu rm ON rm.role_id = a.id
+		WHERE a.id = #{id}
+	</select>
+  <insert id="insertRole" parameterType="com.asiainfo.base.entity.system.SysRole">
+    insert into sys_role (id, name, english_name, enable, remark,del_flag)
+    values (#{id}, #{name}, #{englishName}, #{enable}, #{remark}, #{delFlag})
+  </insert>
+  
+  <update id="updateRole" parameterType="com.asiainfo.base.entity.system.SysRole">
+	    update sys_role
+	    <set>
+	      <if test="name != null">
+	        name = #{name},
+	      </if>
+	      <if test="englishName != null">
+	        english_name = #{englishName},
+	      </if>
+	      <if test="enable != null">
+	        enable = #{enable},
+	      </if>
+	      <if test="remark != null">
+	        remark = #{remark},
+	      </if>
+	      <if test="delFlag != null">
+	        del_flag = #{delFlag},
+	      </if>
+	    </set>
+	    where id = #{id}
+  </update>
+  
+  <select id="selectByMap" resultType="com.asiainfo.base.entity.system.SysRole" parameterType="java.util.Map" >
+		select * from sys_role 
+		<choose>
+		 	<when test="id!=null">
+		 		where id = #{id}
+		 	</when>
+		 	<when test="name!=null">
+		 		where name = #{name}
+		 	</when>
+		</choose>
+	</select>
+	<delete id="deleteRoleMenu" parameterType="java.lang.String">
+		delete from sys_role_menu where role_id = #{id}
+	</delete>
+	<delete id="deleteRole" parameterType="java.lang.String">
+		delete from sys_role where id = #{id}
+	</delete>
+	<delete id="deleteRoleUser" parameterType="java.lang.String">
+		delete from sys_role_user where role_id = #{id}
+	</delete>
+	<insert id="insertRoleMenu">
+		INSERT INTO sys_role_menu(role_id, menu_id)
+		<foreach collection="menuList" item="menu" separator=" union all ">
+			SELECT #{id}, #{menu.id}
+		</foreach>
+	</insert>
+	<select id="findAllList" resultMap="roleResult">
+		SELECT
+			<include refid="roleColumns"/>
+		FROM sys_role a
+		WHERE a.del_flag = 0
+		ORDER BY a.name
+	</select>
+</mapper>
