@@ -1,8 +1,9 @@
-package com.asiainfo.hbase.pojo;
+package com.asiainfo.base.entity.busi;
 
 import com.asiainfo.hbase.annotations.HBaseTable;
 import com.asiainfo.hbase.annotations.HColumn;
 import com.asiainfo.hbase.annotations.HRowkey;
+import com.asiainfo.hbase.pojo.Base;
 
 import java.util.Arrays;
 
@@ -15,7 +16,7 @@ public class TradeImage extends Base
     private String imageName;
     @HColumn(key="desc")
     private  String  imageDesc;
-    @HColumn(key="image",family = "fi")
+    @HColumn(key="image")
     private byte[] imageByte;
     @HColumn(key="trade")
     private String tradeId;

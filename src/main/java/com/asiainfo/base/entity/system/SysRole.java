@@ -1,5 +1,6 @@
 package com.asiainfo.base.entity.system;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,8 +8,8 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class SysRole {
-
+public class SysRole
+{
     private String id;
     private String name;
     private String englishName;

@@ -9,7 +9,7 @@ public class MD5Util {
 	* @Description:
 	* @Date：2017年3月7日下午5:21:09  
 	*/
-	private static final String SALT = "pangolin";
+	private static final String SALT = "ai";
 
     public static String encode(String password) {
         password = password + SALT;

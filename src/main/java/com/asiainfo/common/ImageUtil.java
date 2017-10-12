@@ -1,14 +1,12 @@
 package com.asiainfo.common;
 
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.FileImageOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 
 public class ImageUtil
 {
@@ -16,7 +14,7 @@ public class ImageUtil
     private static Logger logger = Logger.getLogger(ImageUtil.class);
 
     //图片到byte数组
-    public static byte[] image2byte(String path) {
+    public static byte[] image2byte(byte[] image, String path) {
         byte[] data = null;
         FileImageInputStream input = null;
         ByteArrayOutputStream output = null;
@@ -63,7 +61,12 @@ public class ImageUtil
         if (data.length < 3 || path.equals("")) return;
         FileImageOutputStream imageOutput = null;
         try {
-            imageOutput = new FileImageOutputStream(new File(path));
+            File file=  new File(path);
+            if(file != null && file.exists())
+            {
+                file.delete();
+            }
+            imageOutput = new FileImageOutputStream(file);
             imageOutput.write(data, 0, data.length);
             imageOutput.close();
         } catch (Exception ex) {
@@ -100,4 +103,5 @@ public class ImageUtil
         }
         return "0x" + sb.toString().toUpperCase();
     }
+
 }
