@@ -2,7 +2,6 @@ package com.asiainfo.controller.pages;
 
 import com.asiainfo.base.entity.busi.TradeImage;
 import com.asiainfo.base.entity.system.Image;
-import com.asiainfo.base.entity.system.SysUser;
 import com.asiainfo.common.ImageUtil;
 import com.asiainfo.common.StringTools;
 import com.asiainfo.hbase.DefaultHDao;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.asiainfo.base.mapper.pages.ReceiptMapper">
+
+	<resultMap id="rs" type="com.asiainfo.base.entity.busi.TradeReceipt">
+		<id property="tradeId" column="trade_id"></id>
+		<result property="fileName" column="file_name"></result>
+	</resultMap>
+    <select id="findAll" resultMap="rs">
+		select trade_id,file_name from receipt
+	</select>
+	<insert id="save" parameterType="com.asiainfo.base.entity.busi.TradeReceipt">
+		insert into receipt (trade_id,file_name) values(#{tradeId},#{fileName})
+
+	</insert>
+
+</mapper>
